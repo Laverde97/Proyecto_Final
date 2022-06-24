@@ -1,8 +1,9 @@
 library(shiny)
 library(leaflet)
+library(readxl)
 # getwd()
 
-Homecenter <- read_excel("C:/Users/Admin/Documents/SEBASTIAN LAVERDE/MAESTRIA/PRIMER SEMESTRE/Introduccion a la estadistica y probabilidad/BASES DE DATOS STALYN/PROYECTO_HOMECENTER/data/2022 (1).xlsx")
+Homecenter <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx")
 Homecenter$FECHA_CREACION= as.Date(Homecenter$FECHA_CREACION, format = "%d/%m/%Y")
 Homecenter$FECHA_REAL_ENTREGA= as.Date(Homecenter$FECHA_REAL_ENTREGA, format = "%d/%m/%Y")
 Homecenter$FECHA_COMPROMETIDA= as.Date(Homecenter$FECHA_COMPROMETIDA, format = "%d/%m/%Y")
@@ -33,58 +34,62 @@ shinyServer(function(input, output) {
   
   #conteo_Total_Entregas
   output$total_entregas <- renderValueBox({
-    DATA_NP %>%
-      filter(CIUDAD ==input$IDciudad,
-             FAMILIA_PRODUCTO ==input$IDFamilia,
-             Mes==input$IDMes)  %>% 
-      summarise(
-        sum(DATA_NP$CONTEO_DESPACHOS))%>%
-      prettyNum(big.mark = ",") %>%
-      valueBox(subtitle = "Numero entregas", icon = icon("credit-card"))
+    total_entregas=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+             FAMILIA_PRODUCTO ==input$IDFamilia)
+    ntotal_entregas=nrow(total_entregas)
+      valueBox(value=ntotal_entregas, subtitle = "Numero entregas", icon = icon("credit-card"))
   })
-  
-  DATA_CUMPLIMIENTO <- DATA_NP%>%filter(CUMPLIMIENTO_ENTREGA==c("SI"))
   
   #Tasa_Cumplimiento
   output$total_cumplimiento <- renderValueBox({
-    DATA_CUMPLIMIENTO %>%
-           filter(CIUDAD ==input$IDciudad,
-             FAMILIA_PRODUCTO ==input$IDFamilia,
-             Mes==input$IDMes)  %>% 
-      summarise(
-        paste0(round((sum(DATA_CUMPLIMIENTO$CONTEO_DESPACHOS)/sum(DATA_NP$CONTEO_DESPACHOS))*100,2)),"%")%>%
-      valueBox(subtitle = "% Cumplimiento Entregas", icon = icon("thumbs-up"
+    total_entregas=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO ==input$IDFamilia)
+    ntotal_entregas=nrow(total_entregas)
+    
+    total_cumple=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO ==input$IDFamilia & CUMPLIMIENTO_ENTREGA=="SI")
+    ntotal_cumple=nrow(total_cumple)
+    
+    por_cumple=paste0(round(ntotal_cumple/ntotal_entregas*100,2),"%")
+      valueBox(value=por_cumple, subtitle = "% Cumplimiento Entregas", icon = icon("thumbs-up"
                                                                  , lib = "glyphicon"),color = "green")
   })
   
   
-  DATA_DEVOLUCION <- DATA_NP%>%filter(ESTADO_ENTREGA==c("DEVUELTO"))
+  
   
   #Tasa_Devolucion
   output$total_devolucion <- renderValueBox({
-    DATA_DEVOLUCION  %>%
-      filter(CIUDAD ==input$IDciudad,
-             FAMILIA_PRODUCTO ==input$IDFamilia,
-             Mes==input$IDMes)  %>% 
-      summarise(
-        paste0(round((sum(DATA_DEVOLUCION$CONTEO_DESPACHOS)/sum(DATA_NP$CONTEO_DESPACHOS))*100,2)),"%")%>%
-      valueBox(subtitle = "% Devoluciones", icon = icon("thumbs-down"
+    total_entregas=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO ==input$IDFamilia)
+    ntotal_entregas=nrow(total_entregas)
+    
+    total_dev=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO == input$IDFamilia & CUMPLIMIENTO_ENTREGA == "DEVUELTO")
+    ntotal_dev=nrow(total_dev)
+    
+    por_devo=paste0(round(ntotal_dev/ntotal_entregas*100,2),"%")
+    
+      valueBox(value=por_devo, subtitle = "% Devoluciones", icon = icon("thumbs-down"
                                                         , lib = "glyphicon"),color = "red")
   })
   
-  DIAS_ENTREGA<- DATA_NP %>% group_by(DATA_NP$FECHA_CREACION) %>% summarise(sum(DATA_NP$CONTEO_DESPACHOS))
-  DIAS_CREACION_ENTREGA<-nrow(DIAS_ENTREGA)
   
   #Promedio_Diario_Entregas
   output$Promedio_entregas <- renderValueBox({
-    DATA_NP  %>%
-      filter(CIUDAD ==input$IDciudad,
-             FAMILIA_PRODUCTO ==input$IDFamilia,
-             Mes==input$IDMes)  %>% 
-      summarise(
-        round(sum(DATA_NP$CONTEO_DESPACHOS)/DIAS_CREACION_ENTREGA,0))%>%
-      prettyNum(big.mark = ",") %>%
-      valueBox(subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia)
+      ntotal_entregas=nrow(total_entregas)
+    
+      prom_diario=round(ntotal_entregas/120,2)
+      
+      valueBox(value=prom_diario, subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
   })
   
   #Entregas_dia
@@ -92,27 +97,22 @@ shinyServer(function(input, output) {
   
   
   output$lineplot <- renderPlot({
-    DIA_ENTREGA =factor(DATA_NP_SIN_DEVOLUCIONES$DIA_SEMANA_ENTREGA,
-                        levels = c("Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"),
-                        labels = c("Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"))
-    plot(DIA_ENTREGA,col=colors(),xlab="DIA_SEMANA",ylim=c(0,50000))
+    DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO == input$IDFamilia)
+    
+    barplot(table(DATA_NP_SIN_DEVOLUCIONES2$DIA_SEMANA_ENTREGA),col=colors(),xlab="DIA SEMANA")
   })
  # BoxPlot Didactico 
-  output$BoxplotDic <- renderPlot({
-    his(DATA_NP_SIN_DEVOLUCIONES[,input$VarHom],main = input$title, xlab = input$xlab,
-         ylab = input$ylab)
-  })
-  
-  
-  
-  # Boxplot
   output$boxplot <- renderPlot({
-    DIA_ENTREGA =factor(DATA_NP_SIN_DEVOLUCIONES$DIA_SEMANA_ENTREGA,
-                        levels = c("Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"),
-                        labels = c("Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"))
-    boxplot(DATA_NP_SIN_DEVOLUCIONES$CONTEO_DESPACHOS~DIA_ENTREGA,col=colors()
-            ,xlab ="DIA_ENTREGA",ylab = "CONTEO_DESPACHOS",log="y")
+    DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO == input$IDFamilia)
+    boxplot(DATA_NP_SIN_DEVOLUCIONES2$CONTEO_DESPACHOS ~ DATA_NP_SIN_DEVOLUCIONES2$DIA_SEMANA_ENTREGA,
+            col=colors(),xlab="DIA SEMANA", ylab="CONTEO DESPACHOS")
   })
+  
+  
   
 # PANEL GRÁFICAS
   selections = reactive({

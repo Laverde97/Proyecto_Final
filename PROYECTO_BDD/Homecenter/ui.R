@@ -75,17 +75,8 @@ shinyUI(dashboardPage(skin = "green",
                                                 
                                     )
                                     
-                        ),  selectInput(inputId ="IDMes",
-                                        label="MES",
-                                        choices = c("Enero",
-                                                    "Febrero",
-                                                    "Marzo",
-                                                    "Abril"
-                                                    
-                                                    
-                                        )
-                                        
-                        )),
+                        )
+                      ),
                       dashboardBody(
                         tabItems(
                           # Data
@@ -274,7 +265,33 @@ shinyUI(dashboardPage(skin = "green",
                                     # Sidebar with a slider and selection inputs
                                     sidebarPanel(
                                       selectInput("Selecciona", "Familia Producto",
-                                                  choices = FAMI_PROD),
+                                                  choices = c("ACCESORIOS AUTOMOVILES",
+                                                              "AIRE LIBRE",
+                                                              "ALQUILER DE HERRAMIENTAS",
+                                                              "ASEO",
+                                                              "BANOS Y COCINAS",
+                                                              "CASA INTELIGENTE",
+                                                              "DECORACION",
+                                                              "ELECTRICIDAD",
+                                                              "ELECTROHOGAR",
+                                                              "FERRETERIA",
+                                                              "FIERRO/HIERRO",
+                                                              "HERRAMIENTAS Y MAQUINARIAS",
+                                                              "ILUMINACION Y VENTILADORES",
+                                                              "JARDIN",
+                                                              "MADERA Y TABLEROS",
+                                                              "MENAJE",
+                                                              "MUEBLES",
+                                                              "OBRA GRUESA",
+                                                              "ORGANIZACION",
+                                                              "PINTURA Y ACCESORIOS",
+                                                              "PISOS",
+                                                              "PLOMERIA / GASFITERIA",
+                                                              "PROMOCIONES - SERVICIO TECNICO",
+                                                              "PUERTAS/VENTANAS/MOLDURAS",
+                                                              "TABIQUERIA/TECHUMBRE/AISLACION",
+                                                              "TEMPORADA"
+                                                  )),
                                       hr(),
                                       sliderInput("freq",
                                                   "Mínimo Frecuencias:",
