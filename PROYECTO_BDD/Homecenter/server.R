@@ -3,7 +3,7 @@ library(leaflet)
 library(readxl)
 # getwd()
 
-Homecenter <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx")
+Homecenter <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx")
 Homecenter$FECHA_CREACION= as.Date(Homecenter$FECHA_CREACION, format = "%d/%m/%Y")
 Homecenter$FECHA_REAL_ENTREGA= as.Date(Homecenter$FECHA_REAL_ENTREGA, format = "%d/%m/%Y")
 Homecenter$FECHA_COMPROMETIDA= as.Date(Homecenter$FECHA_COMPROMETIDA, format = "%d/%m/%Y")
@@ -147,6 +147,52 @@ shinyServer(function(input, output) {
     })
   
   
+  output$deathPlot_Ciudad = renderPlot({
+    ggplot(data = selections(), aes(x = reorder(CIUDAD, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
+      geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
+      labs(
+        title = " ",
+        x = "CIUDAD",
+        y = "CONTEO_DESPACHOS"
+      ) +
+      theme(axis.text.x = element_text(angle = 45, hjust=1))
+  })
+  
+  output$deathTable_Ciudad  = 
+    DT::renderDataTable({
+      DT::datatable(selections()[,c("ANNO_CREACION", "FECHA_CREACION", "FECHA_REAL_ENTREGA", "FECHA_COMPROMETIDA","FAMILIA_PRODUCTO",
+                                    "ESTADO_ENTREGA", "CONTEO_DESPACHOS", "DIA_ENTREGA", "CUMPLIMIENTO_ENTREGA", "TIENDA_ENTREGA","MES_CREACION",
+                                    "SEMANA_ENTREGA")],
+                    colnames = colnames(unique(DATA_NP_SIN_DEVOLUCIONES)),
+                    options = list(order = list(2, 'des')),
+                    rownames = FALSE,
+      )
+      
+    })
+  
+  
+  output$deathPlot_Mes = renderPlot({
+    ggplot(data = selections(), aes(x = reorder(MES_CREACION, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
+      geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
+      labs(
+        title = " ",
+        x = "MES_CREACION",
+        y = "CONTEO_DESPACHOS"
+      ) +
+      theme(axis.text.x = element_text(angle = 45, hjust=1))
+  })
+  
+  output$deathTable_Mes  = 
+    DT::renderDataTable({
+      DT::datatable(selections()[,c("ANNO_CREACION", "FECHA_CREACION", "FECHA_REAL_ENTREGA", "FECHA_COMPROMETIDA","FAMILIA_PRODUCTO",
+                                    "ESTADO_ENTREGA", "CONTEO_DESPACHOS", "DIA_ENTREGA", "CUMPLIMIENTO_ENTREGA", "TIENDA_ENTREGA","MES_CREACION",
+                                    "SEMANA_ENTREGA")],
+                    colnames = colnames(unique(DATA_NP_SIN_DEVOLUCIONES)),
+                    options = list(order = list(2, 'des')),
+                    rownames = FALSE,
+      )
+      
+    })
 # Nube de Palabras
   terms <- reactive({
     # Change when the "update" button is pressed...
@@ -198,6 +244,64 @@ shinyServer(function(input, output) {
     shapiro.test(variable_esc)
   })
 
+  ###### satisfaccion cliente
+  
+  
+  DATA_ENCUESTA <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx", 
+                              sheet = "Encuesta")
+  
+  DATA_ENCUESTA_DETRACTORES<- DATA_ENCUESTA %>% filter(CALIFICACION %in% c(1,2,3,4,5,6))
+  CONTEO_DETRACTORES<-nrow(DATA_ENCUESTA_DETRACTORES)
+  
+  DATA_ENCUESTA_NEUTROS<- DATA_ENCUESTA %>% filter(CALIFICACION %in% c(7,8))
+  CONTEO_NEUTROS<-nrow(DATA_ENCUESTA_NEUTROS)
+  
+  DATA_ENCUESTA_PROMOTORES<- DATA_ENCUESTA %>% filter(CALIFICACION %in% c(9,10))
+  CONTEO_PROMOTORES<-nrow(DATA_ENCUESTA_PROMOTORES)
+  
+  TOTAL_ENCUESTA <-CONTEO_DETRACTORES+CONTEO_NEUTROS+CONTEO_PROMOTORES
+  
+  INDICADOR_DETRACTORES <- (CONTEO_DETRACTORES/TOTAL_ENCUESTA)
+  INDICADOR_NEUTROS <- (CONTEO_NEUTROS/TOTAL_ENCUESTA)
+  INDICADOR_PROMOTORES <- (CONTEO_PROMOTORES/TOTAL_ENCUESTA)
+  
+  NPS <-(INDICADOR_PROMOTORES-INDICADOR_DETRACTORES)
+  
+  
+  output$Satisfaccion <- renderValueBox({
+    DATA_NP %>%
+      summarise(paste0(round((sum(
+        NPS
+      )) * 100, 2)), "%") %>%
+      valueBox(
+        subtitle = "Satisfaccion Cliente = % Promotores - % Detractores",
+        icon = icon("thumbs-up"
+                    , lib = "glyphicon"),
+        color = "olive"
+      )
+  })
+  
+  
+  output$Detractores <- renderValueBox({
+    DATA_NP %>%
+      summarise(
+        paste0(round((sum(INDICADOR_DETRACTORES))*100,2)),"%")%>%
+      valueBox(subtitle = "% Detractores(Calificacion 1-6)", icon = icon("angry"),color="red")
+  })
+  
+  output$Neutros <- renderValueBox({
+    DATA_NP %>%
+      summarise(
+        paste0(round((sum(INDICADOR_NEUTROS))*100,2)),"%")%>%
+      valueBox(subtitle = "% Neutros(Calificacion 7-8)", icon = icon("meh"),color="orange")
+  })
+  
+  output$Promotores <- renderValueBox({
+    DATA_NP %>%
+      summarise(
+        paste0(round((sum(INDICADOR_PROMOTORES))*100,2)),"%")%>%
+      valueBox(subtitle = "% Promotores (Calificacion 9-10)", icon = icon("smile"),color="green")
+  })
   
   
   

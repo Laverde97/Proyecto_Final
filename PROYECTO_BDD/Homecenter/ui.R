@@ -113,7 +113,8 @@ shinyUI(dashboardPage(skin = "green",
                                   splitLayout(
                                     selectInput(inputId ="IDFamilia",
                                                 label="FAMILIAS PRODUCTOS",
-                                                choices = c("ACCESORIOS AUTOMOVILES",
+                                                choices = c("TOTAL",
+                                                            "ACCESORIOS AUTOMOVILES",
                                                             "AIRE LIBRE",
                                                             "ALQUILER DE HERRAMIENTAS",
                                                             "ASEO",
@@ -144,7 +145,8 @@ shinyUI(dashboardPage(skin = "green",
                                     ),
                                     selectInput(inputId ="IDciudad",
                                                 label="CIUDAD",
-                                                choices = c("ARMENIA",
+                                                choices = c("TOTAL",
+                                                            "ARMENIA",
                                                             "BARRANQUILLA",
                                                             "BOGOTA",
                                                             "BUCARAMANGA",
@@ -231,12 +233,12 @@ shinyUI(dashboardPage(skin = "green",
                                     sidebarPanel(
                                       selectInput(
                                         "varchoice",
-                                        "Choose the variable for which you want to check the normality",
+                                        "Elija la variable para la que desea comprobar la normalidad",
                                         choices = c("CONTEO_DESPACHOS","DIA_ENTREGA")
                                       ),
                                       radioButtons(
                                         "normchoice",
-                                        "How do you want to check the normality?",
+                                        "¿Como quieres comprobar la normalidad?",
                                         choices = c("Plots", "Tests"),
                                         selected = "Plots"
                                       ),
@@ -244,7 +246,7 @@ shinyUI(dashboardPage(skin = "green",
                                         "input.normchoice == 'Plots'",
                                         selectInput(
                                           "plotchoice",
-                                          "Choose which plot you want?",
+                                          "Elige el grafico que  quieres",
                                           choices = c("Histogram", "QQ-Plot")
                                         )
                                       )
@@ -259,8 +261,16 @@ shinyUI(dashboardPage(skin = "green",
                           
                           # Tercera Tabla de contenido
                           tabItem(tabName = "Sentimientos",
+                                  
+                                  h2("Satisfaccion Cliente"),
+                                  fluidRow(
+                                    valueBoxOutput("Detractores",width = 3),
+                                    valueBoxOutput("Neutros",width = 3),
+                                    valueBoxOutput("Promotores",width = 3),
+                                    valueBoxOutput("Satisfaccion",width = 3)),
                                   titlePanel("Nube de Palabras"),
                                   
+                                  fluidRow(
                                   sidebarLayout(
                                     # Sidebar with a slider and selection inputs
                                     sidebarPanel(
@@ -305,7 +315,8 @@ shinyUI(dashboardPage(skin = "green",
                                     mainPanel(
                                       plotOutput("plot")
                                     )
-                                  )
+                                  ))
+                              
                           ),
                           #Gráficas 
                           tabItem(tabName = "Gráficas",
@@ -327,8 +338,13 @@ shinyUI(dashboardPage(skin = "green",
                                       ),
                                       # Show plot and table
                                       mainPanel(
+                                        plotOutput("deathPlot_Ciudad"),
+                                        DT::dataTableOutput("deathTable_Ciudad"),
+                                        plotOutput("deathPlot_Mes"),
+                                        DT::dataTableOutput("deathTable_Mes"),
                                         plotOutput("deathPlot"),
                                         DT::dataTableOutput("deathTable")
+                                        
                                       )
                                     )
                                   )),

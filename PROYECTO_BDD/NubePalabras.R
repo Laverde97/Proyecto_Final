@@ -14,7 +14,7 @@ getTermMatrix <- memoise(function(FAMI_PROD) {
   # Careful not to let just any name slip in here; a
   # malicious user could manipulate this value.
   
-  Homecenter_Encuesta <- read_excel("C:/Users/Admin/Documents/SEBASTIAN LAVERDE/MAESTRIA/PRIMER SEMESTRE/Introduccion a la estadistica y probabilidad/BASES DE DATOS STALYN/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx", 
+  Homecenter_Encuesta <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx", 
                                             sheet = "Encuesta")
   
   
