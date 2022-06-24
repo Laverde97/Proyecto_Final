@@ -172,18 +172,30 @@ shinyServer(function(input, output) {
   
   
 # PANEL INFERENCIA
-  var = reactive({
-    DATA_NP_SIN_DEVOLUCIONES[, input$varchoice]
-    
-  })
+  
   output$myplot =  renderPlot({
-    if (input$plotchoice == "Histogram")
-      return(hist(var(), main = "Histogram", xlab = input$varchoice))
-    else
-      return(qqnorm(var(), main = paste("QQ plot of", input$varchoice)))
+    if(input$varchoice=="CONTEO_DESPACHOS"){
+      variable_esc=DATA_NP_SIN_DEVOLUCIONES$CONTEO_DESPACHOS
+      if (input$plotchoice == "Histogram")
+        return(hist(variable_esc, main = "Histograma", xlab = input$varchoice))
+      else
+        return(qqnorm(variable_esc, main = paste("Cuantil-Cuantil de", input$varchoice)))
+    }else if(input$varchoice=="DIA_ENTREGA"){
+      variable_esc=DATA_NP_SIN_DEVOLUCIONES$DIA_ENTREGA
+      if (input$plotchoice == "Histogram")
+        return(hist(variable_esc, main = "Histograma", xlab = input$varchoice))
+      else
+        return(qqnorm(variable_esc, main = paste("Cuantil-Cuantil de", input$varchoice)))
+    }
+      
   })
   output$mytest = renderPrint({
-    shapiro.test(var())
+    if(input$varchoice=="CONTEO_DESPACHOS"){
+      variable_esc=sample(DATA_NP_SIN_DEVOLUCIONES$CONTEO_DESPACHOS,5000)
+    }else if(input$varchoice=="DIA_ENTREGA"){
+      variable_esc=sample(DATA_NP_SIN_DEVOLUCIONES$DIA_ENTREGA,5000)
+    }
+    shapiro.test(variable_esc)
   })
 
   
