@@ -20,7 +20,8 @@ shinyUI(dashboardPage(skin = "green",
                       ),
                         selectInput(inputId ="IDFamilia",
                                     label="FAMILIAS PRODUCTOS",
-                                    choices = c("ACCESORIOS AUTOMOVILES",
+                                    choices = c("TODOS",
+                                                "ACCESORIOS AUTOMOVILES",
                                                 "AIRE LIBRE",
                                                 "ALQUILER DE HERRAMIENTAS",
                                                 "ASEO",
@@ -51,7 +52,8 @@ shinyUI(dashboardPage(skin = "green",
                         ),
                         selectInput(inputId ="IDciudad",
                                     label="CIUDAD",
-                                    choices = c("ARMENIA",
+                                    choices = c("NACIONAL",
+                                                "ARMENIA",
                                                 "BARRANQUILLA",
                                                 "BOGOTA",
                                                 "BUCARAMANGA",
@@ -110,118 +112,7 @@ shinyUI(dashboardPage(skin = "green",
                                       collapsible = TRUE,
                                       plotOutput("boxplot", height = 250)
                                     )),
-                                  splitLayout(
-                                    selectInput(inputId ="IDFamilia",
-                                                label="FAMILIAS PRODUCTOS",
-                                                choices = c("TOTAL",
-                                                            "ACCESORIOS AUTOMOVILES",
-                                                            "AIRE LIBRE",
-                                                            "ALQUILER DE HERRAMIENTAS",
-                                                            "ASEO",
-                                                            "BANOS Y COCINAS",
-                                                            "CASA INTELIGENTE",
-                                                            "DECORACION",
-                                                            "ELECTRICIDAD",
-                                                            "ELECTROHOGAR",
-                                                            "FERRETERIA",
-                                                            "FIERRO/HIERRO",
-                                                            "HERRAMIENTAS Y MAQUINARIAS",
-                                                            "ILUMINACION Y VENTILADORES",
-                                                            "JARDIN",
-                                                            "MADERA Y TABLEROS",
-                                                            "MENAJE",
-                                                            "MUEBLES",
-                                                            "OBRA GRUESA",
-                                                            "ORGANIZACION",
-                                                            "PINTURA Y ACCESORIOS",
-                                                            "PISOS",
-                                                            "PLOMERIA / GASFITERIA",
-                                                            "PROMOCIONES - SERVICIO TECNICO",
-                                                            "PUERTAS/VENTANAS/MOLDURAS",
-                                                            "TABIQUERIA/TECHUMBRE/AISLACION",
-                                                            "TEMPORADA"
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDciudad",
-                                                label="CIUDAD",
-                                                choices = c("TOTAL",
-                                                            "ARMENIA",
-                                                            "BARRANQUILLA",
-                                                            "BOGOTA",
-                                                            "BUCARAMANGA",
-                                                            "CALI",
-                                                            "CARTAGENA",
-                                                            "CUCUTA",
-                                                            "FUNZA",
-                                                            "GIRARDOT",
-                                                            "IBAGUE",
-                                                            "MANIZALES",
-                                                            "MEDELLIN",
-                                                            "MONTERIA",
-                                                            "NEIVA",
-                                                            "PEREIRA",
-                                                            "SANTA MARTA",
-                                                            "TUNJA",
-                                                            "VALLEDUPAR",
-                                                            "VILLAVICENCIO",
-                                                            "YOPAL"
-                                                            
-                                                            
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDEstado_entrega",
-                                                label="ESTADO ENTREGA",
-                                                choices = c("DEVUELTO",
-                                                            "ENTREGADO COMPLETO"
-                                                            
-                                                            
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDCumplimiento_entrega",
-                                                label="CUMPLIMIENTO ENTREGA",
-                                                choices = c("SI",
-                                                            "NO",
-                                                            "DEVUELTO"
-                                                            
-                                                            
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDAnno",
-                                                label="AÑO",
-                                                choices = c("2022"                         
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDMes",
-                                                label="MES",
-                                                choices = c("Enero",
-                                                            "Febrero",
-                                                            "Marzo",
-                                                            "Abril"
-                                                            
-                                                            
-                                                )
-                                                
-                                    ),
-                                    selectInput(inputId ="IDDia_Entrega",
-                                                label="DIA ENTREGA",
-                                                choices = c("Lunes",
-                                                            "Martes",
-                                                            "Miércoles",
-                                                            "Jueves",
-                                                            "Viernes",
-                                                            "Sábado",
-                                                            "Domingo",
-                                                            "DEVUELTO"
-                                                            
-                                                            
-                                                )
-                                                
-                                    )),
+    
                                   fluidRow(
                                     dataTableOutput("tab"))
                           )),

@@ -27,61 +27,148 @@ shinyServer(function(input, output) {
   
 # DESCRIPTIVO
   
-  output$tab <- renderDataTable({
+  output$tab_2 <- renderDataTable({
     DATA_NP %>% filter(CIUDAD ==input$IDciudad,
                        FAMILIA_PRODUCTO ==input$IDFamilia) 
   })
   
+  output$tab <- renderDataTable({
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      DATA_NP %>% filter(CIUDAD ==input$IDciudad,
+                         FAMILIA_PRODUCTO ==input$IDFamilia)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      DATA_NP %>% filter(CIUDAD ==input$IDciudad
+                         
+        )
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      DATA_NP %>% filter(
+                         FAMILIA_PRODUCTO ==input$IDFamilia)
+      
+    } else {     DATA_NP 
+    
+    }
+    
+  })
+  
   #conteo_Total_Entregas
   output$total_entregas <- renderValueBox({
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
     total_entregas=DATA_NP %>%
       filter(CIUDAD == input$IDciudad &
              FAMILIA_PRODUCTO ==input$IDFamilia)
-    ntotal_entregas=nrow(total_entregas)
+    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      total_entregas=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+    } else {      total_entregas=DATA_NP 
+    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+    }
       valueBox(value=ntotal_entregas, subtitle = "Numero entregas", icon = icon("credit-card"))
   })
   
-  #Tasa_Cumplimiento
+  #Tasa_Cumplimiento_2
   output$total_cumplimiento <- renderValueBox({
-    total_entregas=DATA_NP %>%
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO ==input$IDFamilia)
-    ntotal_entregas=nrow(total_entregas)
-    
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia)
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia & CUMPLIMIENTO_ENTREGA=="SI")
+      ntotal_cumple=sum(total_cumple$CONTEO_DESPACHOS)}
+  
+    else if(input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad  & CUMPLIMIENTO_ENTREGA=="SI")
+      ntotal_cumple=sum(total_cumple$CONTEO_DESPACHOS)
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      total_entregas=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia & CUMPLIMIENTO_ENTREGA=="SI")
+      ntotal_cumple=sum(total_cumple$CONTEO_DESPACHOS)
+      
+    } else {      total_entregas=DATA_NP 
+    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
     total_cumple=DATA_NP %>%
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO ==input$IDFamilia & CUMPLIMIENTO_ENTREGA=="SI")
-    ntotal_cumple=nrow(total_cumple)
-    
+      filter(CUMPLIMIENTO_ENTREGA=="SI")
+    ntotal_cumple=sum(total_cumple$CONTEO_DESPACHOS)
+    }
     por_cumple=paste0(round(ntotal_cumple/ntotal_entregas*100,2),"%")
-      valueBox(value=por_cumple, subtitle = "% Cumplimiento Entregas", icon = icon("thumbs-up"
-                                                                 , lib = "glyphicon"),color = "green")
+    valueBox(value=por_cumple, subtitle = "% Cumplimiento Entregas", icon = icon("thumbs-up"
+                                                                                 , lib = "glyphicon"),color = "green")
   })
   
-  
-  
-  
+
   #Tasa_Devolucion
   output$total_devolucion <- renderValueBox({
-    total_entregas=DATA_NP %>%
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO ==input$IDFamilia)
-    ntotal_entregas=nrow(total_entregas)
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia)
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia &  CUMPLIMIENTO_ENTREGA == "DEVUELTO")
+      ntotal_dev=sum(total_cumple$CONTEO_DESPACHOS)}
     
-    total_dev=DATA_NP %>%
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO == input$IDFamilia & CUMPLIMIENTO_ENTREGA == "DEVUELTO")
-    ntotal_dev=nrow(total_dev)
-    
+    else if(input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad  &  CUMPLIMIENTO_ENTREGA == "DEVUELTO")
+      ntotal_dev=sum(total_cumple$CONTEO_DESPACHOS)
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      total_entregas=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+      total_cumple=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia &  CUMPLIMIENTO_ENTREGA == "DEVUELTO")
+      ntotal_dev=sum(total_cumple$CONTEO_DESPACHOS)
+      
+    } else {      total_entregas=DATA_NP 
+    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+    total_cumple=DATA_NP %>%
+      filter(CUMPLIMIENTO_ENTREGA == "DEVUELTO")
+    ntotal_dev=sum(total_cumple$CONTEO_DESPACHOS)
+    }
     por_devo=paste0(round(ntotal_dev/ntotal_entregas*100,2),"%")
     
-      valueBox(value=por_devo, subtitle = "% Devoluciones", icon = icon("thumbs-down"
-                                                        , lib = "glyphicon"),color = "red")
+    valueBox(value=por_devo, subtitle = "% Devoluciones", icon = icon("thumbs-down"
+                                                                      , lib = "glyphicon"),color = "red")
   })
   
   
   #Promedio_Diario_Entregas
-  output$Promedio_entregas <- renderValueBox({
+  output$Promedio_entregas_2 <- renderValueBox({
       total_entregas=DATA_NP %>%
         filter(CIUDAD == input$IDciudad &
                  FAMILIA_PRODUCTO ==input$IDFamilia)
@@ -92,28 +179,88 @@ shinyServer(function(input, output) {
       valueBox(value=prom_diario, subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
   })
   
+  
+  #Promedio_Diario_Entregas
+  output$Promedio_entregas <- renderValueBox({
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia)
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      total_entregas=DATA_NP %>%
+        filter(FAMILIA_PRODUCTO == input$IDFamilia )
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+      
+    } else {      total_entregas=DATA_NP 
+    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
+    }
+    prom_diario=round(ntotal_entregas/120,0)
+    
+    valueBox(value=prom_diario, subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
+  })
+  
+  
   #Entregas_dia
   
-  
-  
   output$lineplot <- renderPlot({
-    DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO == input$IDFamilia)
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO == input$IDFamilia)}
     
+    else if(input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad 
+                 )
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(
+                 FAMILIA_PRODUCTO == input$IDFamilia)
+      
+    } else {     DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES 
+
+    }
     barplot(table(DATA_NP_SIN_DEVOLUCIONES2$DIA_SEMANA_ENTREGA),col=colors(),xlab="DIA SEMANA")
   })
+  
+
  # BoxPlot Didactico 
   output$boxplot <- renderPlot({
-    DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
-      filter(CIUDAD == input$IDciudad &
-               FAMILIA_PRODUCTO == input$IDFamilia)
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO == input$IDFamilia)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad 
+        )
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(
+          FAMILIA_PRODUCTO == input$IDFamilia)
+      
+    } else {     DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES 
+    
+    }
     boxplot(DATA_NP_SIN_DEVOLUCIONES2$CONTEO_DESPACHOS ~ DATA_NP_SIN_DEVOLUCIONES2$DIA_SEMANA_ENTREGA,
-            col=colors(),xlab="DIA SEMANA", ylab="CONTEO DESPACHOS")
+            col=colors(),xlab="DIA SEMANA", ylab="CONTEO DESPACHOS",log="y")
   })
   
   
-  
+
 # PANEL GRÁFICAS
   selections = reactive({
     req(input$Mes)
