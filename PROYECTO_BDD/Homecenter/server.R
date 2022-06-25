@@ -270,6 +270,8 @@ shinyServer(function(input, output) {
       filter(FAMILIA_PRODUCTO %in% input$Famili) %>%
       filter(CIUDAD %in% input$Ciudad)
   })
+  
+  
   output$deathPlot = renderPlot({
     ggplot(data = selections(), aes(x = reorder(DIA_SEMANA_ENTREGA, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
       geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
@@ -340,6 +342,16 @@ shinyServer(function(input, output) {
       )
       
     })
+  
+  
+  ####nuevos graficos 
+  
+
+  
+
+  
+
+  
 # Nube de Palabras
   terms <- reactive({
     # Change when the "update" button is pressed...
