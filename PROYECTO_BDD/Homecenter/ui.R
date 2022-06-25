@@ -3,7 +3,8 @@ library(shiny)
 library(readxl)
 library(magrittr)
 library(tidyverse)
-
+library(shiny)
+library(mapview)
 
 shinyUI(dashboardPage(skin = "green",
                       dashboardHeader(title = "Dashboard Oportunidad de Entrega Sector Retail"
@@ -18,66 +19,66 @@ shinyUI(dashboardPage(skin = "green",
                         
                         
                       ),
-                        selectInput(inputId ="IDFamilia",
-                                    label="FAMILIAS PRODUCTOS",
-                                    choices = c("TODOS",
-                                                "ACCESORIOS AUTOMOVILES",
-                                                "AIRE LIBRE",
-                                                "ALQUILER DE HERRAMIENTAS",
-                                                "ASEO",
-                                                "BANOS Y COCINAS",
-                                                "CASA INTELIGENTE",
-                                                "DECORACION",
-                                                "ELECTRICIDAD",
-                                                "ELECTROHOGAR",
-                                                "FERRETERIA",
-                                                "FIERRO/HIERRO",
-                                                "HERRAMIENTAS Y MAQUINARIAS",
-                                                "ILUMINACION Y VENTILADORES",
-                                                "JARDIN",
-                                                "MADERA Y TABLEROS",
-                                                "MENAJE",
-                                                "MUEBLES",
-                                                "OBRA GRUESA",
-                                                "ORGANIZACION",
-                                                "PINTURA Y ACCESORIOS",
-                                                "PISOS",
-                                                "PLOMERIA / GASFITERIA",
-                                                "PROMOCIONES - SERVICIO TECNICO",
-                                                "PUERTAS/VENTANAS/MOLDURAS",
-                                                "TABIQUERIA/TECHUMBRE/AISLACION",
-                                                "TEMPORADA"
-                                    )
-                                    
-                        ),
-                        selectInput(inputId ="IDciudad",
-                                    label="CIUDAD",
-                                    choices = c("NACIONAL",
-                                                "ARMENIA",
-                                                "BARRANQUILLA",
-                                                "BOGOTA",
-                                                "BUCARAMANGA",
-                                                "CALI",
-                                                "CARTAGENA",
-                                                "CUCUTA",
-                                                "FUNZA",
-                                                "GIRARDOT",
-                                                "IBAGUE",
-                                                "MANIZALES",
-                                                "MEDELLIN",
-                                                "MONTERIA",
-                                                "NEIVA",
-                                                "PEREIRA",
-                                                "SANTA MARTA",
-                                                "TUNJA",
-                                                "VALLEDUPAR",
-                                                "VILLAVICENCIO",
-                                                "YOPAL"
-                                                
-                                                
-                                    )
-                                    
-                        )
+                      selectInput(inputId ="IDFamilia",
+                                  label="FAMILIAS PRODUCTOS",
+                                  choices = c("TODOS",
+                                              "ACCESORIOS AUTOMOVILES",
+                                              "AIRE LIBRE",
+                                              "ALQUILER DE HERRAMIENTAS",
+                                              "ASEO",
+                                              "BANOS Y COCINAS",
+                                              "CASA INTELIGENTE",
+                                              "DECORACION",
+                                              "ELECTRICIDAD",
+                                              "ELECTROHOGAR",
+                                              "FERRETERIA",
+                                              "FIERRO/HIERRO",
+                                              "HERRAMIENTAS Y MAQUINARIAS",
+                                              "ILUMINACION Y VENTILADORES",
+                                              "JARDIN",
+                                              "MADERA Y TABLEROS",
+                                              "MENAJE",
+                                              "MUEBLES",
+                                              "OBRA GRUESA",
+                                              "ORGANIZACION",
+                                              "PINTURA Y ACCESORIOS",
+                                              "PISOS",
+                                              "PLOMERIA / GASFITERIA",
+                                              "PROMOCIONES - SERVICIO TECNICO",
+                                              "PUERTAS/VENTANAS/MOLDURAS",
+                                              "TABIQUERIA/TECHUMBRE/AISLACION",
+                                              "TEMPORADA"
+                                  )
+                                  
+                      ),
+                      selectInput(inputId ="IDciudad",
+                                  label="CIUDAD",
+                                  choices = c("NACIONAL",
+                                              "ARMENIA",
+                                              "BARRANQUILLA",
+                                              "BOGOTA",
+                                              "BUCARAMANGA",
+                                              "CALI",
+                                              "CARTAGENA",
+                                              "CUCUTA",
+                                              "FUNZA",
+                                              "GIRARDOT",
+                                              "IBAGUE",
+                                              "MANIZALES",
+                                              "MEDELLIN",
+                                              "MONTERIA",
+                                              "NEIVA",
+                                              "PEREIRA",
+                                              "SANTA MARTA",
+                                              "TUNJA",
+                                              "VALLEDUPAR",
+                                              "VILLAVICENCIO",
+                                              "YOPAL"
+                                              
+                                              
+                                  )
+                                  
+                      )
                       ),
                       dashboardBody(
                         tabItems(
@@ -86,7 +87,7 @@ shinyUI(dashboardPage(skin = "green",
                           tabItem(tabName = "Data",
                                   titlePanel("Clientes"),
                                   fluidRow(column(DT::dataTableOutput("RawData"), width = 12)),
-                          
+                                  
                           ),
                           
                           
@@ -107,16 +108,16 @@ shinyUI(dashboardPage(skin = "green",
                                     ),
                                     
                                     fluidRow(
-                                    box(
-                                      title = "Diagrama de Caja", status = "primary", solidHeader = TRUE,
-                                      collapsible = TRUE,
-                                      plotOutput("boxplot", height = 250)
-                                    )),
-    
-                                  fluidRow(
-                                    dataTableOutput("tab"))
-                          )),
-
+                                      box(
+                                        title = "Diagrama de Caja", status = "primary", solidHeader = TRUE,
+                                        collapsible = TRUE,
+                                        plotOutput("boxplot", height = 250)
+                                      )),
+                                    
+                                    fluidRow(
+                                      dataTableOutput("tab"))
+                                  )),
+                          
                           
                           # Segunda  Tabla de contenido
                           tabItem(tabName = "Inferencia",
@@ -162,52 +163,52 @@ shinyUI(dashboardPage(skin = "green",
                                   titlePanel("Nube de Palabras"),
                                   
                                   fluidRow(
-                                  sidebarLayout(
-                                    # Sidebar with a slider and selection inputs
-                                    sidebarPanel(
-                                      selectInput("Selecciona", "Familia Producto",
-                                                  choices = c("ACCESORIOS AUTOMOVILES",
-                                                              "AIRE LIBRE",
-                                                              "ALQUILER DE HERRAMIENTAS",
-                                                              "ASEO",
-                                                              "BANOS Y COCINAS",
-                                                              "CASA INTELIGENTE",
-                                                              "DECORACION",
-                                                              "ELECTRICIDAD",
-                                                              "ELECTROHOGAR",
-                                                              "FERRETERIA",
-                                                              "FIERRO/HIERRO",
-                                                              "HERRAMIENTAS Y MAQUINARIAS",
-                                                              "ILUMINACION Y VENTILADORES",
-                                                              "JARDIN",
-                                                              "MADERA Y TABLEROS",
-                                                              "MENAJE",
-                                                              "MUEBLES",
-                                                              "OBRA GRUESA",
-                                                              "ORGANIZACION",
-                                                              "PINTURA Y ACCESORIOS",
-                                                              "PISOS",
-                                                              "PLOMERIA / GASFITERIA",
-                                                              "PROMOCIONES - SERVICIO TECNICO",
-                                                              "PUERTAS/VENTANAS/MOLDURAS",
-                                                              "TABIQUERIA/TECHUMBRE/AISLACION",
-                                                              "TEMPORADA"
-                                                  )),
-                                      hr(),
-                                      sliderInput("freq",
-                                                  "Mínimo Frecuencias:",
-                                                  min = 1,  max = 150, value = 15),
-                                      sliderInput("max",
-                                                  "Máximo número de palabras:",
-                                                  min = 1,  max = 250,  value = 100)
-                                    ),
-                                    
-                                    # Show Word Cloud
-                                    mainPanel(
-                                      plotOutput("plot")
-                                    )
-                                  ))
-                              
+                                    sidebarLayout(
+                                      # Sidebar with a slider and selection inputs
+                                      sidebarPanel(
+                                        selectInput("Selecciona", "Familia Producto",
+                                                    choices = c("ACCESORIOS AUTOMOVILES",
+                                                                "AIRE LIBRE",
+                                                                "ALQUILER DE HERRAMIENTAS",
+                                                                "ASEO",
+                                                                "BANOS Y COCINAS",
+                                                                "CASA INTELIGENTE",
+                                                                "DECORACION",
+                                                                "ELECTRICIDAD",
+                                                                "ELECTROHOGAR",
+                                                                "FERRETERIA",
+                                                                "FIERRO/HIERRO",
+                                                                "HERRAMIENTAS Y MAQUINARIAS",
+                                                                "ILUMINACION Y VENTILADORES",
+                                                                "JARDIN",
+                                                                "MADERA Y TABLEROS",
+                                                                "MENAJE",
+                                                                "MUEBLES",
+                                                                "OBRA GRUESA",
+                                                                "ORGANIZACION",
+                                                                "PINTURA Y ACCESORIOS",
+                                                                "PISOS",
+                                                                "PLOMERIA / GASFITERIA",
+                                                                "PROMOCIONES - SERVICIO TECNICO",
+                                                                "PUERTAS/VENTANAS/MOLDURAS",
+                                                                "TABIQUERIA/TECHUMBRE/AISLACION",
+                                                                "TEMPORADA"
+                                                    )),
+                                        hr(),
+                                        sliderInput("freq",
+                                                    "Mínimo Frecuencias:",
+                                                    min = 1,  max = 150, value = 15),
+                                        sliderInput("max",
+                                                    "Máximo número de palabras:",
+                                                    min = 1,  max = 250,  value = 100)
+                                      ),
+                                      
+                                      # Show Word Cloud
+                                      mainPanel(
+                                        plotOutput("plot")
+                                      )
+                                    ))
+                                  
                           ),
                           #Gráficas 
                           tabItem(tabName = "Gráficas",
@@ -241,10 +242,13 @@ shinyUI(dashboardPage(skin = "green",
                                   )),
                           
                           # Cuarta Tabla de contenido
-                          tabItem(tabName = "Geoespacial",
-                                  h2("Geoespacial")
+                          tabItem(tabName = "Geoespacial",   
+                                  mainPanel(
+                                    mapview:::mapviewOutput("map")
+                                  )
+                                  
                           )
-
+                          
                         )
                       )
 ))

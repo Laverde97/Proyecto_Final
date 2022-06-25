@@ -1,9 +1,11 @@
 library(shiny)
 library(leaflet)
 library(readxl)
+library(mapview)
+
 # getwd()
 
-Homecenter <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx")
+Homecenter <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx", sheet="Data_NP")
 Homecenter$FECHA_CREACION= as.Date(Homecenter$FECHA_CREACION, format = "%d/%m/%Y")
 Homecenter$FECHA_REAL_ENTREGA= as.Date(Homecenter$FECHA_REAL_ENTREGA, format = "%d/%m/%Y")
 Homecenter$FECHA_COMPROMETIDA= as.Date(Homecenter$FECHA_COMPROMETIDA, format = "%d/%m/%Y")
@@ -12,8 +14,71 @@ DATA_NP= Homecenter
 DATA_NP_SIN_DEVOLUCIONES=DATA_NP
 DATA_NP_SIN_DEVOLUCIONES=DATA_NP_SIN_DEVOLUCIONES %>% filter(DIA_SEMANA_ENTREGA !="DEVUELTO")
 # Define server logic required to draw a histogram
+
+################################################################################
+#                                                                              #
+#                                  GEOESPACIAL                                 #
+#                                                                              #
+################################################################################
+
+library(GADMTools)
+COL <- gadm_sf_loadCountries(c("COL"), level=0, basefile="./")
+
+# gadm_plot(DEPTOS)
+# suppressPackageStartupMessages(library(mapview))
+# DEPTOS$sf %>% mapview(zcol = "NAME_1", legend = TRUE, col.regions = sf.colors)
+
+
+library(readxl)
+MAPA <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/MAPA.xlsx")
+MAPA$DEPTO<- c("Quindio",
+               "Atlantico",
+               "Cundinamarca",
+               "Santander",
+               "Valle del Cauca",
+               "Bolívar",
+               "Norte de Santander",
+               "Cundinamarca",
+               "Cundinamarca",
+               "Tolima",
+               "Caldas",
+               "Antioquia",	
+               "Córdoba",
+               "Huila"	,
+               "Risaralda",
+               "Magdalena",
+               "Boyacá",	
+               "Cesar",
+               "Meta",
+               "Casanare")
+
+# MAPA
+# MUNICIPIOS <- gadm_sf_loadCountries(c("COL"), level = 1, basefile = "./")
+# gadm_plot(MUNICIPIOS)
+
+
+DEPTOS <- gadm_sf_loadCountries(c("COL"), level = 1, basefile = "./")
+
+map_colo=DEPTOS$sf
+colnames(map_colo)=c("ISO","PAIS","DEPTO","TYPE_1",   "ENGTYPE_1","geometry" )
+
+
+BASE_MAPA<-merge(x =map_colo ,y = MAPA, by="DEPTO")[,-c(2,4,5)]
+
+library(leafpop)
+
+# colnames(unique(BASE_MAPA))
+colnames(BASE_MAPA)<- c("DEPTO","PAIS", "CIUDAD" ,"TOTAL_CONTEO_DESPACHOS", "PROMEDIO_ENTREGAS" ,"PROMEDIO_DESPACHOS_DIA", "geometry")
+# mapview(BASE_MAPA,zcol = "DEPTO", legend = TRUE, col.regions = sf.colors,  popup = popupTable(
+#   BASE_MAPA,
+#   zcol = c("DEPTO","PAIS", "CIUDAD" ,"TOTAL_CONTEO_DESPACHOS", "PROMEDIO_ENTREGAS" ,"PROMEDIO_DESPACHOS_DIA"
+#   )
+# ))
+
+
+
 shinyServer(function(input, output) {
-   # DATA 
+  # DATA 
   
   output$RawData <- DT::renderDataTable(
     DT::datatable({
@@ -25,7 +90,7 @@ shinyServer(function(input, output) {
     style = "bootstrap")
   )
   
-# DESCRIPTIVO
+  # DESCRIPTIVO
   
   output$tab_2 <- renderDataTable({
     DATA_NP %>% filter(CIUDAD ==input$IDciudad,
@@ -40,15 +105,15 @@ shinyServer(function(input, output) {
     else if(input$IDciudad !="NACIONAL" ){
       DATA_NP %>% filter(CIUDAD ==input$IDciudad
                          
-        )
+      )
       
     } else if (input$IDFamilia !="TODOS")
     {
       DATA_NP %>% filter(
-                         FAMILIA_PRODUCTO ==input$IDFamilia)
+        FAMILIA_PRODUCTO ==input$IDFamilia)
       
     } else {     DATA_NP 
-    
+      
     }
     
   })
@@ -56,10 +121,10 @@ shinyServer(function(input, output) {
   #conteo_Total_Entregas
   output$total_entregas <- renderValueBox({
     if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
-    total_entregas=DATA_NP %>%
-      filter(CIUDAD == input$IDciudad &
-             FAMILIA_PRODUCTO ==input$IDFamilia)
-    ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)}
+      total_entregas=DATA_NP %>%
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO ==input$IDFamilia)
+      ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)}
     
     else if(input$IDciudad !="NACIONAL" ){
       total_entregas=DATA_NP %>%
@@ -75,7 +140,7 @@ shinyServer(function(input, output) {
     } else {      total_entregas=DATA_NP 
     ntotal_entregas=sum(total_entregas$CONTEO_DESPACHOS)
     }
-      valueBox(value=ntotal_entregas, subtitle = "Numero entregas", icon = icon("credit-card"))
+    valueBox(value=ntotal_entregas, subtitle = "Numero entregas", icon = icon("credit-card"))
   })
   
   #Tasa_Cumplimiento_2
@@ -90,7 +155,7 @@ shinyServer(function(input, output) {
         filter(CIUDAD == input$IDciudad &
                  FAMILIA_PRODUCTO ==input$IDFamilia & CUMPLIMIENTO_ENTREGA=="SI")
       ntotal_cumple=sum(total_cumple$CONTEO_DESPACHOS)}
-  
+    
     else if(input$IDciudad !="NACIONAL" ){
       total_entregas=DATA_NP %>%
         filter(CIUDAD == input$IDciudad )
@@ -121,7 +186,7 @@ shinyServer(function(input, output) {
                                                                                  , lib = "glyphicon"),color = "green")
   })
   
-
+  
   #Tasa_Devolucion
   output$total_devolucion <- renderValueBox({
     if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
@@ -169,14 +234,14 @@ shinyServer(function(input, output) {
   
   #Promedio_Diario_Entregas
   output$Promedio_entregas_2 <- renderValueBox({
-      total_entregas=DATA_NP %>%
-        filter(CIUDAD == input$IDciudad &
-                 FAMILIA_PRODUCTO ==input$IDFamilia)
-      ntotal_entregas=nrow(total_entregas)
+    total_entregas=DATA_NP %>%
+      filter(CIUDAD == input$IDciudad &
+               FAMILIA_PRODUCTO ==input$IDFamilia)
+    ntotal_entregas=nrow(total_entregas)
     
-      prom_diario=round(ntotal_entregas/120,2)
-      
-      valueBox(value=prom_diario, subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
+    prom_diario=round(ntotal_entregas/120,2)
+    
+    valueBox(value=prom_diario, subtitle = "Promedio Diario Entregas", icon = icon("list"),color = "purple")
   })
   
   
@@ -219,22 +284,22 @@ shinyServer(function(input, output) {
     else if(input$IDciudad !="NACIONAL" ){
       DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
         filter(CIUDAD == input$IDciudad 
-                 )
+        )
       
     } else if (input$IDFamilia !="TODOS")
     {
       DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
         filter(
-                 FAMILIA_PRODUCTO == input$IDFamilia)
+          FAMILIA_PRODUCTO == input$IDFamilia)
       
     } else {     DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES 
-
+    
     }
     barplot(table(DATA_NP_SIN_DEVOLUCIONES2$DIA_SEMANA_ENTREGA),col=colors(),xlab="DIA SEMANA")
   })
   
-
- # BoxPlot Didactico 
+  
+  # BoxPlot Didactico 
   output$boxplot <- renderPlot({
     if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
       DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
@@ -260,8 +325,8 @@ shinyServer(function(input, output) {
   })
   
   
-
-# PANEL GRÁFICAS
+  
+  # PANEL GRÁFICAS
   selections = reactive({
     req(input$Mes)
     req(input$Famili)
@@ -270,8 +335,6 @@ shinyServer(function(input, output) {
       filter(FAMILIA_PRODUCTO %in% input$Famili) %>%
       filter(CIUDAD %in% input$Ciudad)
   })
-  
-  
   output$deathPlot = renderPlot({
     ggplot(data = selections(), aes(x = reorder(DIA_SEMANA_ENTREGA, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
       geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
@@ -342,17 +405,7 @@ shinyServer(function(input, output) {
       )
       
     })
-  
-  
-  ####nuevos graficos 
-  
-
-  
-
-  
-
-  
-# Nube de Palabras
+  # Nube de Palabras
   terms <- reactive({
     # Change when the "update" button is pressed...
     input$update
@@ -376,7 +429,7 @@ shinyServer(function(input, output) {
   })
   
   
-# PANEL INFERENCIA
+  # PANEL INFERENCIA
   
   output$myplot =  renderPlot({
     if(input$varchoice=="CONTEO_DESPACHOS"){
@@ -392,7 +445,7 @@ shinyServer(function(input, output) {
       else
         return(qqnorm(variable_esc, main = paste("Cuantil-Cuantil de", input$varchoice)))
     }
-      
+    
   })
   output$mytest = renderPrint({
     if(input$varchoice=="CONTEO_DESPACHOS"){
@@ -402,11 +455,11 @@ shinyServer(function(input, output) {
     }
     shapiro.test(variable_esc)
   })
-
+  
   ###### satisfaccion cliente
   
   
-  DATA_ENCUESTA <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx", 
+  DATA_ENCUESTA <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx", 
                               sheet = "Encuesta")
   
   DATA_ENCUESTA_DETRACTORES<- DATA_ENCUESTA %>% filter(CALIFICACION %in% c(1,2,3,4,5,6))
@@ -464,6 +517,31 @@ shinyServer(function(input, output) {
   
   
   
+  #  GEOESPACIAL 
+  
+  
+  
+  m <- mapview(
+    BASE_MAPA,
+    zcol = "DEPTO",
+    legend = TRUE,
+    col.regions = sf.colors,
+    popup = popupTable(
+      BASE_MAPA,
+      zcol = c(
+        "DEPTO",
+        "PAIS",
+        "CIUDAD" ,
+        "TOTAL_CONTEO_DESPACHOS",
+        "PROMEDIO_ENTREGAS" ,
+        "PROMEDIO_DESPACHOS_DIA"
+      )
+    )
+  )
+  
+  output$map <- renderLeaflet({
+    m@map
+  })
   
   
   
@@ -471,7 +549,4 @@ shinyServer(function(input, output) {
   
   
   
-  
-  
-
 })
