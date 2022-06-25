@@ -5,7 +5,7 @@ library(mapview)
 
 # getwd()
 
-Homecenter <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx", sheet="Data_NP")
+Homecenter <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx", sheet="Data_NP")
 Homecenter$FECHA_CREACION= as.Date(Homecenter$FECHA_CREACION, format = "%d/%m/%Y")
 Homecenter$FECHA_REAL_ENTREGA= as.Date(Homecenter$FECHA_REAL_ENTREGA, format = "%d/%m/%Y")
 Homecenter$FECHA_COMPROMETIDA= as.Date(Homecenter$FECHA_COMPROMETIDA, format = "%d/%m/%Y")
@@ -30,7 +30,7 @@ COL <- gadm_sf_loadCountries(c("COL"), level=0, basefile="./")
 
 
 library(readxl)
-MAPA <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/MAPA.xlsx")
+MAPA <- read_excel("C:/Users/ingca/Downloads/MAPA.xlsx")
 MAPA$DEPTO<- c("Quindio",
                "Atlantico",
                "Cundinamarca",
@@ -329,11 +329,12 @@ shinyServer(function(input, output) {
   # PANEL GRÁFICAS
   selections = reactive({
     req(input$Mes)
-    req(input$Famili)
-    req(input$Ciudad)
-    filter(DATA_NP_SIN_DEVOLUCIONES, MES_CREACION == input$Mes) %>%
-      filter(FAMILIA_PRODUCTO %in% input$Famili) %>%
-      filter(CIUDAD %in% input$Ciudad)
+    #req(input$Famili)
+    #req(input$Ciudad)
+    filter(DATA_NP_SIN_DEVOLUCIONES, MES_CREACION == input$Mes) 
+    #%>%
+     # filter(FAMILIA_PRODUCTO %in% input$Famili) %>%
+      #filter(CIUDAD %in% input$Ciudad)
   })
   output$deathPlot = renderPlot({
     ggplot(data = selections(), aes(x = reorder(DIA_SEMANA_ENTREGA, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
@@ -405,6 +406,73 @@ shinyServer(function(input, output) {
       )
       
     })
+  
+  #####prueba 
+  
+  
+  output$plotprueba <- renderPlot({
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO == input$IDFamilia)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad 
+        )
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(
+          FAMILIA_PRODUCTO == input$IDFamilia)
+      
+    } else {     DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES 
+    
+    }
+    ggplot(selections(), aes(x = reorder(CIUDAD, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
+      geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
+      labs(
+        title = " ",
+        x = "CIUDAD",
+        y = "CONTEO_DESPACHOS"
+      ) +
+      theme(axis.text.x = element_text(angle = 45, hjust=1))
+  })
+  
+  
+  output$plotprueba_familia <- renderPlot({
+    if(input$IDFamilia !="TODOS" & input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad &
+                 FAMILIA_PRODUCTO == input$IDFamilia)}
+    
+    else if(input$IDciudad !="NACIONAL" ){
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(CIUDAD == input$IDciudad 
+        )
+      
+    } else if (input$IDFamilia !="TODOS")
+    {
+      DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES %>% 
+        filter(
+          FAMILIA_PRODUCTO == input$IDFamilia)
+      
+    } else {     DATA_NP_SIN_DEVOLUCIONES2=DATA_NP_SIN_DEVOLUCIONES 
+    
+    }
+    ggplot(selections(), aes(x = reorder(FAMILIA_PRODUCTO, -CONTEO_DESPACHOS), y = CONTEO_DESPACHOS )) +
+      geom_bar(stat = 'identity', color = 'steelblue', fill = 'steelblue') +
+      labs(
+        title = " ",
+        x = "FAMILIA",
+        y = "CONTEO_DESPACHOS"
+      ) +
+      theme(axis.text.x = element_text(angle = 45, hjust=1))
+  })
+  
+  
+ 
   # Nube de Palabras
   terms <- reactive({
     # Change when the "update" button is pressed...
@@ -459,7 +527,7 @@ shinyServer(function(input, output) {
   ###### satisfaccion cliente
   
   
-  DATA_ENCUESTA <- read_excel("C:/Users/Rodrigo Gomez/Desktop/Proyecto_Final/PROYECTO_BDD/data/2022 (1).xlsx", 
+  DATA_ENCUESTA <- read_excel("C:/Users/ingca/Downloads/2022 (1).xlsx", 
                               sheet = "Encuesta")
   
   DATA_ENCUESTA_DETRACTORES<- DATA_ENCUESTA %>% filter(CALIFICACION %in% c(1,2,3,4,5,6))

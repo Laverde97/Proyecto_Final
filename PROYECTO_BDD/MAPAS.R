@@ -17,7 +17,9 @@ DEPTOS <- gadm_sf_loadCountries(c("COL"), level = 1, basefile = "./")
 
 
 library(readxl)
-MAPA <- read_excel("C:/Users/Admin/Downloads/MAPA.xlsx")
+
+
+MAPA <- read_excel("C:/Users/ingca/Downloads/MAPA.xlsx")
 MAPA$DEPTO<- c("Quindio",
                "Atlantico",
                "Cundinamarca",

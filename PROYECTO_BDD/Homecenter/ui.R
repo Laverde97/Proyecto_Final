@@ -215,28 +215,33 @@ shinyUI(dashboardPage(skin = "green",
                                   fluidRow(
                                     sidebarLayout(
                                       sidebarPanel(
+                                        fluidRow(
                                         selectInput(inputId = "Mes",
                                                     label = "Seleccione el Mes:",
                                                     choices = c("Enero",
                                                                 "Febrero",
                                                                 "Marzo",
-                                                                "Abril")),
-                                        selectInput(inputId = "Famili",
-                                                    label = "Familia Producto:",
-                                                    choices = unique(DATA_NP_SIN_DEVOLUCIONES$FAMILIA_PRODUCTO)),
-                                        selectInput(inputId = "Ciudad",
-                                                    label = "Ciudad",
-                                                    choices =unique(DATA_NP_SIN_DEVOLUCIONES$CIUDAD))
+                                                                "Abril")),width="90%")
+                                        
                                       ),
                                       # Show plot and table
                                       mainPanel(
-                                        plotOutput("deathPlot_Ciudad"),
-                                        DT::dataTableOutput("deathTable_Ciudad"),
-                                        plotOutput("deathPlot_Mes"),
-                                        DT::dataTableOutput("deathTable_Mes"),
-                                        plotOutput("deathPlot"),
-                                        DT::dataTableOutput("deathTable")
+                                       # plotOutput("deathPlot_Ciudad"),
+                                        #DT::dataTableOutput("deathTable_Ciudad"),
+                                        #plotOutput("deathPlot_Mes"),
+                                       # DT::dataTableOutput("deathTable_Mes"),
+                                       # plotOutput("deathPlot"),
+                                       # DT::dataTableOutput("deathTable"),
                                         
+                                        ##### PRUEBA
+                                        
+                                          
+                                          
+                                          fluidRow(
+                                            
+                                              plotOutput("plotprueba"),
+                                             plotOutput("plotprueba_familia")
+                                              )
                                       )
                                     )
                                   )),
