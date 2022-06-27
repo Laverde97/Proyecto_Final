@@ -1,5 +1,5 @@
 ---
-title: "TALLER"
+title: "Documento"
 author: "Sergio, Rodrigo y Sebastian"
 date: '2022-06-27'
 output: word_document
@@ -9,22 +9,140 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Taller
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+•	Objetivo general: 
 
-```{r cars}
-summary(cars)
+Realizar análisis exploratorio de las bases de datos empleando los concepto y técnicas vistas en clase. 
+
+•	Objetivos específicos: 
+
+1.	Proponer una temática de análisis a la que pueda dar respuesta con la información disponible.
+2.	Proponer un análisis exploratorio para las bases de datos (tablas y gráficos) y realizar la interpretación de los resultados según la temática propuesta.
+3.	Presentar la forma de cálculo y análisis de los resultados, para esto deberá seleccionar por lo menos 10 indicadores asociados con la temática propuesta.
+
+•	Introducción: 
+
+
+
+•	La justificación de las variables seleccionadas para el análisis:
+
+
+
+•	Resultados: 
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+# Vamos a cargar todas las librerias que necesitamos
+library(tidyverse)
+library(readxl)
+library(psych)
+library(knitr)
+
+
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+```{r,echo=FALSE,message=FALSE,fig.width=7,fig.align='center',fig.height=5, message=FALSE,warning=FALSE}
+
+
+
+```
+
+
+•	Conclusiones: 
+
+
+
+
+
