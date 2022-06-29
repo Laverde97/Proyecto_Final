@@ -220,4 +220,283 @@ Indica_Salud <-
   2)
 Indica_Salud
 
+###############################################################################
+#                                                                             #
+#                              REALIZAMOS ANÁLISIS                            #
+#                                  DESCRIPTIVO                                #
+#                                                                             #
+###############################################################################
+
+# Eliminamos la columna "Identificador"
+Base_Descri <- select(BASE_EXPLO1, -"Identificador")
+
+# Cambiamos las etiquetas de las variables (ENCUESTA) --------------------------------
+
+# p7sexo
+
+Base_Descri$p7sexo <- factor(Base_Descri$p7sexo, labels = c("Masculino", "Femenino"))
+
+#p14sgsss
+
+Base_Descri$p14sgsss <- factor(Base_Descri$p14sgsss, labels = c("Contributivo", "Subsidiado", "Vinculado", "Especial", "NS/NR"))
+
+# p31usaamalgama
+
+Base_Descri$p31usaamalgama <- factor(Base_Descri$p31usaamalgama, labels = c("Si", "No",  "NS/NR"))
+
+# p32amalgamacasa
+
+Base_Descri$p32amalgamacasa <- factor(Base_Descri$p32amalgamacasa, labels = c("Si", "No",  "NS/NR"))
+
+# p33almacenahg
+
+Base_Descri$p33almacenahg <- factor(Base_Descri$p33almacenahg, labels = c("Si", "No",  "NS/NR"))
+
+# p35guardatoxicas
+
+Base_Descri$p35guardatoxicas <- factor(Base_Descri$p35guardatoxicas, labels = c("Si", "No",  "NS/NR"))
+
+# p36manipulatoxicas
+
+Base_Descri$p36manipulatoxicas <- factor(Base_Descri$p36manipulatoxicas, labels = c("Si", "No",  "NS/NR"))
+
+# p37cercafumigaciones
+
+Base_Descri$p37cercafumigaciones <- factor(Base_Descri$p37cercafumigaciones, labels = c("Si", "No",  "NS/NR"))
+
+# p38zonaproduccion
+Base_Descri$p38zonaproduccion <- factor(Base_Descri$p38zonaproduccion, labels = c("Si", "No",  "NS/NR"))
+
+
+# Cambiamos las etiquetas de las variables (SALUD) --------------------------------
+
+# p12cancerpulmon
+
+Base_Descri$p12cancerpulmon <- factor(Base_Descri$p12cancerpulmon, labels = c("Si", "No",  "NS/NR"))
+
+# p13cancervejiga
+
+Base_Descri$p13cancervejiga <- factor(Base_Descri$p13cancervejiga, labels = c("Si", "No",  "NS/NR"))
+
+# p14cancerpiel
+
+Base_Descri$p14cancerpiel <- factor(Base_Descri$p14cancerpiel, labels = c("Si", "No",  "NS/NR"))
+
+# p15cancerriñon
+
+Base_Descri$p15cancerriñon <- factor(Base_Descri$p15cancerriñon, labels = c("Si", "No",  "NS/NR"))
+
+# p16cancerprostata
+
+Base_Descri$p16cancerprostata <- factor(Base_Descri$p16cancerprostata, labels = c("Si", "No",  "NS/NR"))
+
+# p17cancerhigado
+
+Base_Descri$p17cancerhigado <- factor(Base_Descri$p17cancerhigado, labels = c("Si", "No",  "NS/NR"))
+
+# p20fractura
+
+Base_Descri$p20fractura <- factor(Base_Descri$p20fractura, labels = c("Traumática", "No_Traumática"))
+
+# p21osteoporosis 
+
+Base_Descri$p21osteoporosis <- factor(Base_Descri$p21osteoporosis, labels = c("Si", "No",  "NS/NR"))
+
+# p22conciencia
+
+Base_Descri$p22conciencia <- factor(Base_Descri$p22conciencia, labels = c("Si", "No",  "NS/NR"))
+
+# p23embarazo
+Base_Descri$p23embarazo <- factor(Base_Descri$p23embarazo, labels = c("Si", "No"))
+
+
+
+# Identificar datos atipicos  ---------------------------------------------
+
+# BoxPlot Edad Vs (Encuesta) ---------------------------------------------------
+
+
+# Boxplot de la variable Edad
+
+Conf3x2 = matrix(c(1:9), nrow =  3, byrow=TRUE)
+
+layout(Conf3x2)
+
+boxplot(
+  Base_Descri$p6edad,
+  horizontal = FALSE,
+  ylab = "Edad",
+  col = "aliceblue",
+  main = "BoxPlot de Edad"
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p7sexo,
+  xlab = "Género",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Género",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p14sgsss,
+  xlab = "Tipo de usuario en el SGSSS",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Tipo de usuario en el SGSSS",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p32amalgamacasa,
+  xlab = "Usted o algún miembro de su familia que viva con usted realiza quema de amalgama en casa",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Quema de amalgama",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p33almacenahg,
+  xlab = "Usted o algún miembro de su familia que viva con usted  guarda mercurio o azogue en casa",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Mercurio",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p35guardatoxicas,
+  xlab = "Usted o algún miembro de su familia que viva con usted  guarda mercurio o azogue en casa",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Guarda sustancias Tóxicas",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p36manipulatoxicas,
+  xlab = "Usted está en contacto o manipula alguna sustancia tóxica o peligrosa (cianuro, plaguicidas  o venenos, u otra)",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Manipula sustancias Tóxicas",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p37cercafumigaciones,
+  xlab = "Su casa está cerca de zonas de cultivo o donde se realicen fumigaciones?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs ¿Su casa está cerca de zonas de cultivo o donde se realicen fumigaciones?",
+  col = rainbow(2)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p38zonaproduccion,
+  xlab = "Su casa está cerca de zonas o industrias de procesamiento o producción de sustancias tóxicas",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs Procesamiento sustancias Tóxicas",
+  col = rainbow(2)
+)
+
+# BoxPlot Edad Vs (salud) ---------------------------------------------------
+
+Conf3x2 = matrix(c(1:6), nrow =  2, byrow=TRUE)
+
+layout(Conf3x2)
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p12cancerpulmon,
+  xlab = " ¿Le han diagnosticado cáncer de pulmón?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de pulmón?",
+  col = rainbow(3)
+)
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p13cancervejiga,
+  xlab = "¿Le han diagnosticado cáncer de vejiga?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de vejiga?",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p14cancerpiel,
+  xlab = "¿Le han diagnosticado cáncer  en la piel?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer  en la piel? ",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p15cancerriñon,
+  xlab = "¿Le han diagnosticado cáncer de riñón?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de riñón?",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p16cancerprostata,
+  xlab = "¿Le han diagnosticado cáncer de próstata?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de próstata?",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p17cancerhigado,
+  xlab = " ¿Le han diagnosticado cáncer de hígado?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs   ¿Le han diagnosticado cáncer de hígado?",
+  col = rainbow(3)
+)
+
+
+Conf2x2 = matrix(c(1:4), nrow =  2, byrow=TRUE)
+
+layout(Conf2x2)
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p20fractura,
+  xlab = "Si ha sufrido fracturas, la fractura fue:",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs   Si ha sufrido fracturas",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p21osteoporosis,
+  xlab = "¿Le han diagnosticado osteoporosis?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs ¿Le han diagnosticado osteoporosis?",
+  col = rainbow(3)
+)
+
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p22conciencia,
+  xlab = "¿Ha presentado algún trauma severo con perdida de la conciencia?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs ¿Ha presentado algún trauma severo con perdida de la conciencia?",
+  col = rainbow(3)
+)
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p23embarazo,
+  xlab = "¿Actualmente se encuentra embarazada?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs ¿Actualmente se encuentra embarazada?",
+  col = rainbow(3)
+)
+
 
