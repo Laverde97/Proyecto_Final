@@ -32,6 +32,9 @@ library(readxl)
 library(psych)
 library(knitr)
 library(readxl)
+library(dplyr)
+library(webr)
+library(dplyr)
 ###############################################################################
 #                                                                             #
 #                              CARGAR LAS BASES DE                            #
@@ -40,8 +43,31 @@ library(readxl)
 ###############################################################################
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SALUD_15_mas <- read_excel("TALLER_2/Taller/SALUD/BD_15 y más.xlsx")
-ENCUESTA_15_mas <- read_excel("TALLER_2/Taller/ENCUESTA/BD_15 y más.xlsx")
+ENCUESTA_15_mas <-
+  read_excel("TALLER_2/Taller/ENCUESTA/BD_15 y más.xlsx")
+
+dim(SALUD_15_mas)
+dim(ENCUESTA_15_mas)
+
+
+2326 + 2339
+max()
 
 ###############################################################################
 #                                                                             #
@@ -75,10 +101,11 @@ colnames(ENCUESTA_15_mas) <-
 # Hacemos un Left_Join para unir dos bases de datos por la variable "Identificador"
 
 
-BASE_EXPLO1 <- left_join(x = ENCUESTA_15_mas, y = SALUD_15_mas, by = "Identificador")
 
+BASE_EXPLO1 <-
+  left_join(x = ENCUESTA_15_mas, y = SALUD_15_mas, by = "Identificador")
 
-
+colnames(unique(BASE_EXPLO1))
 ###############################################################################
 #                                                                             #
 #                           REALIZAMOS LOS INDICADORES                        #
@@ -155,7 +182,8 @@ Adultos <- BASE_EXPLO1 %>%
 Indi35 <- Adultos %>%
   filter(
     p12cancerpulmon == 1 |
-      p13cancervejiga == 1 | p14cancerpiel == 1 | p15cancerriñon == 1 |
+      p13cancervejiga == 1 |
+      p14cancerpiel == 1 | p15cancerriñon == 1 |
       p16cancerprostata == 1 | p17cancerhigado == 1
   ) %>%
   summarise("id35" = n() / dim(Adultos)[1]) * 100
@@ -228,86 +256,110 @@ Indica_Salud
 ###############################################################################
 
 # Eliminamos la columna "Identificador"
-Base_Descri <- select(BASE_EXPLO1, -"Identificador")
+Base_Descri <- select(BASE_EXPLO1,-"Identificador")
 
 # Cambiamos las etiquetas de las variables (ENCUESTA) --------------------------------
 
 # p7sexo
 
-Base_Descri$p7sexo <- factor(Base_Descri$p7sexo, labels = c("Masculino", "Femenino"))
+Base_Descri$p7sexo <-
+  factor(Base_Descri$p7sexo, labels = c("Masculino", "Femenino"))
 
 #p14sgsss
 
-Base_Descri$p14sgsss <- factor(Base_Descri$p14sgsss, labels = c("Contributivo", "Subsidiado", "Vinculado", "Especial", "NS/NR"))
+Base_Descri$p14sgsss <-
+  factor(
+    Base_Descri$p14sgsss,
+    labels = c("Contributivo", "Subsidiado", "Vinculado", "Especial", "NS/NR")
+  )
 
 # p31usaamalgama
 
-Base_Descri$p31usaamalgama <- factor(Base_Descri$p31usaamalgama, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p31usaamalgama <-
+  factor(Base_Descri$p31usaamalgama, labels = c("Si", "No",  "NS/NR"))
 
 # p32amalgamacasa
 
-Base_Descri$p32amalgamacasa <- factor(Base_Descri$p32amalgamacasa, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p32amalgamacasa <-
+  factor(Base_Descri$p32amalgamacasa, labels = c("Si", "No",  "NS/NR"))
 
 # p33almacenahg
 
-Base_Descri$p33almacenahg <- factor(Base_Descri$p33almacenahg, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p33almacenahg <-
+  factor(Base_Descri$p33almacenahg, labels = c("Si", "No",  "NS/NR"))
 
 # p35guardatoxicas
 
-Base_Descri$p35guardatoxicas <- factor(Base_Descri$p35guardatoxicas, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p35guardatoxicas <-
+  factor(Base_Descri$p35guardatoxicas, labels = c("Si", "No",  "NS/NR"))
 
 # p36manipulatoxicas
 
-Base_Descri$p36manipulatoxicas <- factor(Base_Descri$p36manipulatoxicas, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p36manipulatoxicas <-
+  factor(Base_Descri$p36manipulatoxicas, labels = c("Si", "No",  "NS/NR"))
 
 # p37cercafumigaciones
 
-Base_Descri$p37cercafumigaciones <- factor(Base_Descri$p37cercafumigaciones, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p37cercafumigaciones <-
+  factor(Base_Descri$p37cercafumigaciones,
+         labels = c("Si", "No",  "NS/NR"))
 
 # p38zonaproduccion
-Base_Descri$p38zonaproduccion <- factor(Base_Descri$p38zonaproduccion, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p38zonaproduccion <-
+  factor(Base_Descri$p38zonaproduccion, labels = c("Si", "No",  "NS/NR"))
 
 
 # Cambiamos las etiquetas de las variables (SALUD) --------------------------------
 
 # p12cancerpulmon
 
-Base_Descri$p12cancerpulmon <- factor(Base_Descri$p12cancerpulmon, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p12cancerpulmon <-
+  factor(Base_Descri$p12cancerpulmon, labels = c("Si", "No",  "NS/NR"))
 
 # p13cancervejiga
 
-Base_Descri$p13cancervejiga <- factor(Base_Descri$p13cancervejiga, labels = c( "No",  "NS/NR"))
+Base_Descri$p13cancervejiga <-
+  factor(Base_Descri$p13cancervejiga, labels = c("No",  "NS/NR"))
 
 # p14cancerpiel
 
-Base_Descri$p14cancerpiel <- factor(Base_Descri$p14cancerpiel, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p14cancerpiel <-
+  factor(Base_Descri$p14cancerpiel, labels = c("Si", "No",  "NS/NR"))
 
 # p15cancerriñon
 
-Base_Descri$p15cancerriñon <- factor(Base_Descri$p15cancerriñon, labels = c("No",  "NS/NR"))
+Base_Descri$p15cancerriñon <-
+  factor(Base_Descri$p15cancerriñon, labels = c("No",  "NS/NR"))
 
 # p16cancerprostata
 
-Base_Descri$p16cancerprostata <- factor(Base_Descri$p16cancerprostata, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p16cancerprostata <-
+  factor(Base_Descri$p16cancerprostata, labels = c("Si", "No",  "NS/NR"))
 
 # p17cancerhigado
 
-Base_Descri$p17cancerhigado <- factor(Base_Descri$p17cancerhigado, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p17cancerhigado <-
+  factor(Base_Descri$p17cancerhigado, labels = c("Si", "No",  "NS/NR"))
 
 # p20fractura
 
-Base_Descri$p20fractura <- factor(Base_Descri$p20fractura, labels = c("Traumática", "No_Traumática"))
+Base_Descri$p20fractura <-
+  factor(Base_Descri$p20fractura,
+         labels = c("Traumática", "No_Traumática"))
 
-# p21osteoporosis 
+# p21osteoporosis
 
-Base_Descri$p21osteoporosis <- factor(Base_Descri$p21osteoporosis, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p21osteoporosis <-
+  factor(Base_Descri$p21osteoporosis, labels = c("Si", "No",  "NS/NR"))
 
 # p22conciencia
 
-Base_Descri$p22conciencia <- factor(Base_Descri$p22conciencia, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p22conciencia <-
+  factor(Base_Descri$p22conciencia, labels = c("Si", "No",  "NS/NR"))
 
 # p23embarazo
-Base_Descri$p23embarazo <- factor(Base_Descri$p23embarazo, labels = c("Si", "No"))
+Base_Descri$p23embarazo <-
+  factor(Base_Descri$p23embarazo, labels = c("Si", "No"))
 
 
 
@@ -318,7 +370,7 @@ Base_Descri$p23embarazo <- factor(Base_Descri$p23embarazo, labels = c("Si", "No"
 
 # Boxplot de la variable Edad
 
-Conf3x2 = matrix(c(1:9), nrow =  3, byrow=TRUE)
+Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf3x2)
 
@@ -357,6 +409,9 @@ boxplot(
   col = rainbow(2)
 )
 
+Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
+
+layout(Conf3x2)
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p33almacenahg,
@@ -404,7 +459,7 @@ boxplot(
 
 # BoxPlot Edad Vs (salud) ---------------------------------------------------
 
-Conf3x2 = matrix(c(1:4), nrow =  2, byrow=TRUE)
+Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf3x2)
 
@@ -462,7 +517,7 @@ boxplot(
 
 
 
-Conf2x2 = matrix(c(1:4), nrow =  2, byrow=TRUE)
+Conf2x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf2x2)
 
@@ -501,13 +556,40 @@ boxplot(
 )
 
 
-library(ggplot2)
-p <- ggplot(Base_Descri, aes(p7sexo, p6edad, fill = p21osteoporosis))
-p + geom_boxplot()
+# Boxplot de Osteoporosis distribuidos por Género y Edad
+
+Base_oste = filter(Base_Descri, p21osteoporosis == "Si" | p21osteoporosis == "No")
+
+p <- ggplot(Base_oste, aes(p7sexo, p6edad, fill = p21osteoporosis))
+p + geom_boxplot(outlier.color = "red") +
+  guides(fill = guide_legend(title = "Osteoporosis")) +
+  xlab("Género") + ylab("Edad") + ggtitle("Boxplot de Osteoporosis \n distribuidos por Género y Edad")
 
 
 
-ftable(Base_Descri$p7sexo,Base_Descri$p23embarazo)
+# DETECCION DE OUTLIERS
+g_caja = boxplot(Base_Descri$p6edad ~ Base_Descri$p21osteoporosis)
+g_caja$out
 
-ftable(Base_Descri$p7sexo,Base_Descri$p21osteoporosis)
+# SELECCION DE VARIABLES
+# 1. Edad
+# 2. Genero
+# 3. SGSSS
+# TODAS
 
+# Gráfico de comparaciones entre las variables Fractura, Género y SGSSS Vs Edad
+
+
+Base_Descri1 = Base_Descri %>%
+  select(p7sexo, p20fractura, p6edad, p14sgsss) %>%
+  na.omit(p20fractura)
+colnames(Base_Descri1) = c("Género", "Fractura", "Edad", "SGSSS")
+p1 <-
+  ggplot(Base_Descri1, aes(x = SGSSS, y = Edad, fill = Fractura))
+p1 + geom_boxplot() + facet_wrap( ~ Género, scales = "free")
+
+Dona <- Base_Descri %>%
+  select(p7sexo, p14sgsss) %>%
+  group_by()
+colnames(Dona) = c("Género", "SGSSS")
+PieDonut(Dona, aes(Género, SGSSS), title = "Género por Tipo de usuario en el SGSSS")
