@@ -276,7 +276,7 @@ Base_Descri$p12cancerpulmon <- factor(Base_Descri$p12cancerpulmon, labels = c("S
 
 # p13cancervejiga
 
-Base_Descri$p13cancervejiga <- factor(Base_Descri$p13cancervejiga, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p13cancervejiga <- factor(Base_Descri$p13cancervejiga, labels = c( "No",  "NS/NR"))
 
 # p14cancerpiel
 
@@ -284,7 +284,7 @@ Base_Descri$p14cancerpiel <- factor(Base_Descri$p14cancerpiel, labels = c("Si", 
 
 # p15cancerriñon
 
-Base_Descri$p15cancerriñon <- factor(Base_Descri$p15cancerriñon, labels = c("Si", "No",  "NS/NR"))
+Base_Descri$p15cancerriñon <- factor(Base_Descri$p15cancerriñon, labels = c("No",  "NS/NR"))
 
 # p16cancerprostata
 
@@ -404,7 +404,7 @@ boxplot(
 
 # BoxPlot Edad Vs (salud) ---------------------------------------------------
 
-Conf3x2 = matrix(c(1:6), nrow =  2, byrow=TRUE)
+Conf3x2 = matrix(c(1:4), nrow =  2, byrow=TRUE)
 
 layout(Conf3x2)
 
@@ -417,31 +417,12 @@ boxplot(
 )
 
 boxplot(
-  Base_Descri$p6edad ~ Base_Descri$p13cancervejiga,
-  xlab = "¿Le han diagnosticado cáncer de vejiga?",
-  ylab = "Edad",
-  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de vejiga?",
-  col = rainbow(3)
-)
-
-
-boxplot(
   Base_Descri$p6edad ~ Base_Descri$p14cancerpiel,
   xlab = "¿Le han diagnosticado cáncer  en la piel?",
   ylab = "Edad",
   main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer  en la piel? ",
   col = rainbow(3)
 )
-
-
-boxplot(
-  Base_Descri$p6edad ~ Base_Descri$p15cancerriñon,
-  xlab = "¿Le han diagnosticado cáncer de riñón?",
-  ylab = "Edad",
-  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de riñón?",
-  col = rainbow(3)
-)
-
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p16cancerprostata,
@@ -459,6 +440,26 @@ boxplot(
   main = "BoxPlot de Edad vs   ¿Le han diagnosticado cáncer de hígado?",
   col = rainbow(3)
 )
+
+# Estos BoxPlot no van en el trabajo
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p13cancervejiga,
+  xlab = "¿Le han diagnosticado cáncer de vejiga?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de vejiga?",
+  col = rainbow(3)
+)
+
+# Estos BoxPlot no van en el trabajo
+
+boxplot(
+  Base_Descri$p6edad ~ Base_Descri$p15cancerriñon,
+  xlab = "¿Le han diagnosticado cáncer de riñón?",
+  ylab = "Edad",
+  main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer de riñón?",
+  col = rainbow(3)
+)
+
 
 
 Conf2x2 = matrix(c(1:4), nrow =  2, byrow=TRUE)
@@ -499,4 +500,14 @@ boxplot(
   col = rainbow(3)
 )
 
+
+library(ggplot2)
+p <- ggplot(Base_Descri, aes(p7sexo, p6edad, fill = p21osteoporosis))
+p + geom_boxplot()
+
+
+
+ftable(Base_Descri$p7sexo,Base_Descri$p23embarazo)
+
+ftable(Base_Descri$p7sexo,Base_Descri$p21osteoporosis)
 
