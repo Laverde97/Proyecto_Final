@@ -374,6 +374,8 @@ Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf3x2)
 
+# Boxplot de  Edad
+
 boxplot(
   Base_Descri$p6edad,
   horizontal = FALSE,
@@ -382,6 +384,7 @@ boxplot(
   main = "BoxPlot de Edad"
 )
 
+# Boxplot de p7sexo distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p7sexo,
@@ -391,6 +394,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p14sgsss distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p14sgsss,
@@ -400,6 +404,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p32amalgamacasa distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p32amalgamacasa,
@@ -409,9 +414,12 @@ boxplot(
   col = rainbow(2)
 )
 
+# Dividimos el panel de gráficas 2x2
 Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf3x2)
+
+# Boxplot de p33almacenahg distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p33almacenahg,
@@ -421,6 +429,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p35guardatoxicas distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p35guardatoxicas,
@@ -430,6 +439,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p36manipulatoxicas distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p36manipulatoxicas,
@@ -439,6 +449,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p37cercafumigaciones distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p37cercafumigaciones,
@@ -448,6 +459,7 @@ boxplot(
   col = rainbow(2)
 )
 
+# Boxplot de p38zonaproduccion distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p38zonaproduccion,
@@ -457,11 +469,13 @@ boxplot(
   col = rainbow(2)
 )
 
-# BoxPlot Edad Vs (salud) ---------------------------------------------------
+# BoxPlot Edad Vs (Cancer - SALUD) ---------------------------------------------------
 
 Conf3x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf3x2)
+
+# Boxplot de p12cancerpulmon distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p12cancerpulmon,
@@ -471,6 +485,8 @@ boxplot(
   col = rainbow(3)
 )
 
+# Boxplot de p14cancerpiel distribuidos por Edad
+
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p14cancerpiel,
   xlab = "¿Le han diagnosticado cáncer  en la piel?",
@@ -478,6 +494,8 @@ boxplot(
   main = "BoxPlot de Edad vs  ¿Le han diagnosticado cáncer  en la piel? ",
   col = rainbow(3)
 )
+
+# Boxplot de p16cancerprostata distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p16cancerprostata,
@@ -487,6 +505,7 @@ boxplot(
   col = rainbow(3)
 )
 
+# Boxplot de p17cancerhigado distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p17cancerhigado,
@@ -521,6 +540,8 @@ Conf2x2 = matrix(c(1:4), nrow =  2, byrow = TRUE)
 
 layout(Conf2x2)
 
+# Boxplot de p20fractura distribuidos por Edad
+
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p20fractura,
   xlab = "Si ha sufrido fracturas, la fractura fue:",
@@ -529,6 +550,7 @@ boxplot(
   col = rainbow(3)
 )
 
+# Boxplot de p21osteoporosis distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p21osteoporosis,
@@ -538,6 +560,7 @@ boxplot(
   col = rainbow(3)
 )
 
+# Boxplot de p22conciencia distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p22conciencia,
@@ -546,6 +569,8 @@ boxplot(
   main = "BoxPlot de Edad vs ¿Ha presentado algún trauma severo con perdida de la conciencia?",
   col = rainbow(3)
 )
+
+# Boxplot de p23embarazo distribuidos por Edad
 
 boxplot(
   Base_Descri$p6edad ~ Base_Descri$p23embarazo,
@@ -575,7 +600,7 @@ g_caja$out
 # 1. Edad
 # 2. Genero
 # 3. SGSSS
-# TODAS
+# TODAS las variables de Encuesta
 
 # Gráfico de comparaciones entre las variables Fractura, Género y SGSSS Vs Edad
 
