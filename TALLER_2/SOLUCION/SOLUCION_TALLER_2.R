@@ -5,6 +5,8 @@
 ###############################################################################
 
 # Juan Laverde
+# Rodrigo Gomez
+# Sergio Castellanos
 # Version 0.0.1
 # Curso de Bases de datos.
 # 27 - 06 - 2022
@@ -43,31 +45,10 @@ library(dplyr)
 ###############################################################################
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 SALUD_15_mas <- read_excel("TALLER_2/Taller/SALUD/BD_15 y más.xlsx")
 ENCUESTA_15_mas <-
   read_excel("TALLER_2/Taller/ENCUESTA/BD_15 y más.xlsx")
 
-dim(SALUD_15_mas)
-dim(ENCUESTA_15_mas)
-
-
-2326 + 2339
-max()
 
 ###############################################################################
 #                                                                             #
@@ -258,7 +239,7 @@ Indica_Salud
 # Eliminamos la columna "Identificador"
 Base_Descri <- select(BASE_EXPLO1,-"Identificador")
 
-# Cambiamos las etiquetas de las variables (ENCUESTA) --------------------------------
+# Cambiamos las etiquetas de las variables (ENCUESTA) -------------------------
 
 # p7sexo
 
@@ -361,9 +342,6 @@ Base_Descri$p22conciencia <-
 Base_Descri$p23embarazo <-
   factor(Base_Descri$p23embarazo, labels = c("Si", "No"))
 
-
-
-# Identificar datos atipicos  ---------------------------------------------
 
 # BoxPlot Edad Vs (Encuesta) ---------------------------------------------------
 
@@ -618,3 +596,105 @@ Dona <- Base_Descri %>%
   group_by()
 colnames(Dona) = c("Género", "SGSSS")
 PieDonut(Dona, aes(Género, SGSSS), title = "Género por Tipo de usuario en el SGSSS")
+
+
+
+###############################################################################
+#                                                                             #
+#                               ANÁLISIS CALIDAD                              #
+#                                  INFORMACION                                #
+#                                                                             #
+###############################################################################
+
+
+# Duplicidad variable Identificador --------------------------------------------                          
+
+
+#Conteo repetidos 15 o más edad
+length(which(table(SALUD_15_mas$Identificador) > 1))
+length(which(table(ENCUESTA_15_mas$Identificador) > 1))
+
+# No se encontraron repetidos en de la variable Identificador
+
+#Variables con N/A en la base de SALUD -----------------------------------------
+
+na_SALUD_15_mas <-
+  apply(X = is.na(SALUD_15_mas),
+        MARGIN = 2,
+        FUN = sum)
+
+# p20fractura con 2096 registros N/A que equivale a 90,11% del total de 
+#personas  que respondieron la encuesta de SALUD de 15 o mas 
+
+Mujeres_Conteo <-
+  BASE_EXPLO1 %>% filter(p7sexo == 2) %>% summarise("Conteo_Mujeres" = n())
+
+Mujeres <- BASE_EXPLO1 %>% filter(p7sexo==2)
+
+na_SALUD_15_mas_mujeres <-
+  apply(X = is.na(Mujeres),
+        MARGIN = 2,
+        FUN = sum)
+
+# p23embarazo con 22 registros N/A que equivale a 1,48 % del total de mujeres 
+# de 15 o mas que respondieron la encuesta de SALUD
+
+
+# Variables con N/A en la base de ENCUESTA ------------------------------------
+
+na_ENCUESTA_15_mas <-
+  apply(X = is.na(ENCUESTA_15_mas),
+        MARGIN = 2,
+        FUN = sum)
+na_ENCUESTA_15_mas
+
+# p31usaamalgama con 601 registros N/A que equivale a 25,69% del total de 
+# encuestados de 15 o mas años
+
+
+# Personas sin responder la encuesta de Salud ----------------------------------
+
+na_Base_Agrupada <-
+  apply(X = is.na(BASE_EXPLO1),
+        MARGIN = 2,
+        FUN = sum)
+
+# Al realizar la union de la base de ENCUESTA con la de SALUD por el 
+# Identificador encontramos que 22 persoanas que contestaron la ENCUESTA no se 
+# encuentran en la base de SALUD, esas 22 personas equivalen al 0,98 % de 
+# personas de 15 o mas que se encontraban en la base de ENCUESTA.
+
+# Personas sin responder la ENCUESTA -------------------------------------------
+
+BASE_EXPLO_SALUD_ENCUESTA <-
+  left_join(x = SALUD_15_mas, y = ENCUESTA_15_mas, by = "Identificador")
+na_Base_Agrupada_SALUD_ENCUESTA <-
+  apply(
+    X = is.na(BASE_EXPLO_SALUD_ENCUESTA),
+    MARGIN = 2,
+    FUN = sum
+  )
+
+# Al realizar la union de la base de SALUD con ENCUESTA por el Identificador 
+# encontramos que 9 personas que contestaron la de SALUD  no se encuentran en 
+# la base de ENCUESTA, esas 9 personas equivalen al 0,38 % de personas de 15 o 
+# mas que se encontraban en la base de SALUD.
+
+# Inconsistencias datos --------------------------------------------------------
+
+Genero_Embarazos_Hombres <-
+  BASE_EXPLO1 %>% group_by (p23embarazo) %>% filter(p7sexo == 1)%>% 
+  summarise("Conteo_Embarazos" = n())
+
+# Para la variable p23embarazo tenemos una incosistencia en la respuesta 
+# que dieron los hombres donde aparece 2 hombres que marcaron "1" , lo cual no 
+# tiene logica que un hombre este embarazado.
+
+conteo_men_15_annos <-
+  BASE_EXPLO1 %>%  filter(p6edad<15) %>% summarise("Conteo_<_15_annos" = n())
+
+# Se confirma que en la base de 15 o mas no se tienen edades menores a 15. 
+
+
+
+
